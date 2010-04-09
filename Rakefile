@@ -11,9 +11,10 @@ task :install do
   %x(mkdir -p #{BASH_DIR}/dotfiles #{BASH_DIR}/bin)
   
   # Copy Bashrc file
-  %x(cp "#{CURRENT_DIR}/bashrc" "#{BASH_DIR}/bashrc")
+  %x(cp #{CURRENT_DIR}/bashrc #{BASH_DIR}/bashrc)
   
   # Copy all dotfiles
+  %x(rm #{BASH_DIR}/dotfiles/*)
   Dir.open("#{CURRENT_DIR}/dotfiles").each do |file|
     unless File.directory?("#{CURRENT_DIR}/dotfiles/#{file}")
       %x(cp #{CURRENT_DIR}/dotfiles/#{file} #{BASH_DIR}/dotfiles/#{file})
@@ -21,6 +22,7 @@ task :install do
   end
   
   # Copy all binfiles
+  %x(rm #{BASH_DIR}/bin/*)
   Dir.open("#{CURRENT_DIR}/bin").each do |file|
     unless File.directory?("#{CURRENT_DIR}/bin/#{file}")
       %x(cp #{CURRENT_DIR}/bin/#{file} #{BASH_DIR}/bin/#{file})
