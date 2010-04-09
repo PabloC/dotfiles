@@ -30,6 +30,15 @@ task :install do
   # Installs Custom .gemrc file
   %x(cp #{CURRENT_DIR}/gemrc #{HOME}/.gemrc)
   
+  # Backup the current ~/.profile if it exists
+  if File.exist?("#{HOME}/.profile")
+    %x(mv #{HOME}/.profile #{HOME}/.profile.backup.#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")})
+  end
+  
   # Append the Bash source to the .profile in the $HOME directory
   File.open("#{HOME}/.profile", "w") { |file| file << 'source ~/Bash/bashrc' }
+
+  # Tell user to reload the shell configuration
+  puts "\n\nInstalled! Now run the following command to reload the configuration:"
+  puts "source ~/.profile\n\n"
 end
