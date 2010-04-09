@@ -1,0 +1,72 @@
+#! /usr/bin/env ruby
+
+# Checks to see if the given utility is installed
+def installed?(util)
+  %x(which #{util}).chomp!
+end
+
+# Makes the path or file friendly for UNIX environment
+def make_friendly(file)
+  file.gsub("'", "\\'").gsub('"', '\\"').gsub(" ", "\\ ")
+end
+
+# Checks to see if the given file extension is valid
+def valid_filetype?(file)
+  true if file =~ /.+\.(#{EXTENSIONS})/
+end
+
+# Creates a mp3 folder from the specified path, converts movie files
+# and places the .mp3 output files inside the mp3 folder
+def convert(file)
+  mp3_file = file.gsub(/\.(#{EXTENSIONS})/,'').gsub('\\ ', ' ') + '.mp3'
+  %x(mkdir #{PATH}/mp3)
+  %x(ffmpeg -i "#{File.join(RAW_PATH, file.gsub('\\ ', ' '))}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 "#{File.join(RAW_PATH, 'mp3', mp3_file)}")
+end
+
+
+# See if FFMPEG is installed on the system
+unless installed?("ffmpeg")
+  puts "ffmpeg is not installed on your system."
+  puts "This software requires ffmpeg to convert video formats to mp3."
+  puts "To install ffmpeg:"
+  puts "on Mac:     sudo port install ffmpeg"
+  puts "on Linux:   sudo apt-get install ffmpeg"
+  exit
+end
+
+# Sets a temporary execute path
+exe_path = File.expand_path(ARGV[0] || '.')
+
+# Sets the RAW_PATH and RAW_FILE (if present)
+if File.directory?(exe_path)
+  RAW_PATH = exe_path
+elsif File.exists?(exe_path)
+  RAW_PATH, RAW_FILE = $1, $2 if exe_path =~ /(.+\/)(.+)/
+end
+
+# RAW_PATH and RAW_FILE are used for Ruby Methods
+# PATH and FILE are used for UNIX utilities/commands and are properly escaped
+# Sets the extensions, append more to support more video formats
+PATH        = make_friendly(RAW_PATH)
+FILE        = make_friendly(RAW_FILE) if defined?(RAW_FILE)
+EXTENSIONS  = %w[mp4 flv mov wmv avi].join('|')
+
+# Executes if a directory is targetted
+if !defined?(FILE) and File.directory?(RAW_PATH)
+  Dir.new(RAW_PATH).each do |file|
+    if valid_filetype?(file)
+      puts "Converting #{file}.."
+      convert(make_friendly(file))
+    end
+  end
+  exit
+end
+
+# Executes if a single file is targetted
+if defined?(FILE) and File.exists?(File.join(RAW_PATH, RAW_FILE))
+  if valid_filetype?(RAW_FILE)
+    puts "Converting #{RAW_FILE}.."
+    convert(FILE)
+  end
+  exit
+end

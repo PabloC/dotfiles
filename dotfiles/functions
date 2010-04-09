@@ -1,0 +1,9 @@
+# Clones own repository from GitHub
+function github {
+  git clone git@github.com:meskyanichi/$1.git
+}
+
+# Clones own repository from TrunksApp
+function trunksapp {
+  git clone git@trunksapp.com:meskyanichi/$1.git
+}

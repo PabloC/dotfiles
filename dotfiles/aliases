@@ -1,0 +1,34 @@
+# Shell Management
+alias reload="source ~/.profile"
+
+# SSH Connections
+alias fc="ssh root@208.88.125.67"
+alias ts="ssh root@208.88.125.213"
+
+# Git Commands
+alias gc="git commit -m"
+alias gco="git checkout"
+alias gm="git merge"
+alias ga="git add"
+alias gs="git status"
+alias gb="git branch"
+alias gbd="git branch -d"
+alias gp="git push"
+
+# Ruby Gem Commands
+alias gi="gem install"
+
+# MongoDB
+alias ms="/opt/mongodb/bin/mongod"
+
+# Rails 2.x.x scripts
+alias ss="./script/server"
+alias sg="./script/generate"
+alias sc="./script/console"
+alias sp="./script/plugin"
+
+# Flush Cache
+alias flushcache="dscacheutil -flushcache"
+
+# Open GitX
+alias gitx="open -a gitx"

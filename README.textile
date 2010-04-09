@@ -1,0 +1,7 @@
+h1. Dotfiles
+
+This is my setup for Mac OSX.
+
+h2. Install
+
+  

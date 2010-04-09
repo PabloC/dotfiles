@@ -1,0 +1,14 @@
+# Default Editor: TextMate
+export EDITOR="mate -w"
+
+# Bash UI
+PS1="\n\u: \w\n→ "
+
+# Prepend Additional Load Paths
+export PATH=~/Bash/bin:~/.gem/ruby/1.8/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+
+# Enable Auto Feature
+export AUTOFEATURE=true
+
+# Enable RSpec
+export RSPEC=true

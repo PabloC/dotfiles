@@ -1,0 +1,88 @@
+#! /usr/bin/env ruby
+begin
+  require 'rubygems'
+  require 'json'
+  require 'open-uri'
+  require 'progressbar'
+rescue LoadError
+  puts "Not all required gems have been installed."
+  puts "Be sure to install: json and progressbar"
+  exit
+end
+
+# YouTube
+# This class allows you to directly download videos straight from YouTube
+# All you have to do is provide the full URL to a video on YouTube.com
+# See the examples below!
+class YouTube
+  
+  BASE_URI = "http://www.youtube.com/"
+  
+  def self.read_video_from(url, &block)
+    download_video(parse_video_url(url), &block)
+  end
+  
+  def self.read_video_from_and_download_to(url, path = Dir.pwd)
+    full_path = File.expand_path(File.join(path, parse_video_title(url) + '.flv'))
+    read_video_from(url) do |youtube|
+      File.open(full_path, "w") do |video|
+        video.write(youtube.read)
+      end
+    end
+  end
+  
+  def self.parse_video_title(url)
+    open(url) do |file|
+      file.each_line do |line|
+        if line =~ /<h1 >(.*)<\/h1>/
+          return $1
+        end
+      end
+    end
+    false
+  end
+  
+  private
+ 
+    def self.parse_video_url(url)
+      url       =~ /watch\?v=(.*)/ 
+      video_id  = $1.split("&")[0]
+      video_url = nil
+      open("#{BASE_URI}watch\?v=#{video_id}&fmt=18") do |page|
+        page.each_line do |line|
+          if line =~ /.SWF_ARGS.:(.*),\n$/
+            params    = JSON.parse($1)
+            video_url = "#{BASE_URI}get_video?video_id=#{params['video_id']}&t=#{params['t']}"
+            break
+          end
+        end
+      end
+      video_url || could_not_locate_video_file
+    end
+    
+    def self.could_not_locate_video_file
+      puts "Could not locate video file for the given URL!"
+      exit
+    end
+ 
+    def self.download_video(url, &block)
+      puts "Downloading Video From YouTube..."
+      progress_bar = nil
+      open(url, :proxy => nil, :content_length_proc => lambda { |length|
+        if length && 0 < length
+          progress_bar = ProgressBar.new(url, length)
+        end 
+      },
+      :progress_proc => lambda { |progress|
+        progress_bar.set(progress) if progress_bar
+      }, &block)
+      puts ""
+      puts "Finished downloading video!"
+    end
+
+end
+
+URL   = ARGV.shift
+PATH  = ARGV.shift || Dir.pwd
+
+YouTube::read_video_from_and_download_to(URL, PATH)
