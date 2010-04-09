@@ -4,4 +4,6 @@ This is my setup for Mac OSX.
 
 h2. Install
 
-  
+bc. git clone git://github.com/meskyanichi/dotfiles.git
+cd dotfiles
+rake install
