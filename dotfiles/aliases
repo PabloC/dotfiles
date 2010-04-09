@@ -1,9 +1,17 @@
 # Shell Management
 alias reload="source ~/.profile"
 
+# Shortcuts
+alias c="pbcopy"
+alias p="pbpaste"
+
 # SSH Connections
 alias fc="ssh root@208.88.125.67"
 alias ts="ssh root@208.88.125.213"
+
+# IP Values
+alias fcip="echo 208.88.125.67"
+alias tsip="echo 208.88.125.213"
 
 # Git Commands
 alias gc="git commit -m"
