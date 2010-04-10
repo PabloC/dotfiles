@@ -7,6 +7,11 @@ BASH_DIR    = HOME + "/Bash"
 
 desc "Installs Environment on this machine."
 task :install do
+  # Removes Bash Directory if it exists
+  if File.directory?(BASH_DIR)
+    %x(rm -rf #{BASH_DIR})
+  end
+  
   # Creates Bash Directory in $HOME
   %x(mkdir -p #{BASH_DIR}/dotfiles #{BASH_DIR}/bin)
   
@@ -14,7 +19,6 @@ task :install do
   %x(cp #{CURRENT_DIR}/bashrc #{BASH_DIR}/bashrc)
   
   # Copy all dotfiles
-  %x(rm #{BASH_DIR}/dotfiles/*)
   Dir.open("#{CURRENT_DIR}/dotfiles").each do |file|
     unless File.directory?("#{CURRENT_DIR}/dotfiles/#{file}")
       %x(cp #{CURRENT_DIR}/dotfiles/#{file} #{BASH_DIR}/dotfiles/#{file})
@@ -22,7 +26,6 @@ task :install do
   end
   
   # Copy all binfiles
-  %x(rm #{BASH_DIR}/bin/*)
   Dir.open("#{CURRENT_DIR}/bin").each do |file|
     unless File.directory?("#{CURRENT_DIR}/bin/#{file}")
       %x(cp #{CURRENT_DIR}/bin/#{file} #{BASH_DIR}/bin/#{file})
