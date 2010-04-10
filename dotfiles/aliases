@@ -29,6 +29,7 @@ alias gi="gem install"
 
 # MongoDB
 alias ms="/opt/mongodb/bin/mongod"
+alias msd="/opt/mongodb/bin/mongod --fork --logpath=/usr/local/mongodb/logs/log"
 
 # Rails 2.x.x scripts
 alias ss="./script/server"
