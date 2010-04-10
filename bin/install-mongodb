@@ -1,30 +1,43 @@
 #!/usr/bin/env ruby
 
-# WARNING
-# This script has not yet been tested!
-
-if ARGV.size < 2 then
-  puts "Please provide your OS [osx|ubuntu] the URL to the MongoDB download."
-  puts "Example:"
-  puts "\s\sinstall-mongodb ubuntu http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.4.0.tgz"
+# Description
+if ARGV.empty? then
+  puts "\nPlease provide the URL to the MongoDB package. (Please select a download from the official website)"
+  puts "\nExample:"
+  puts "\s\sinstall-mongodb http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.4.0.tgz"
+  puts "\nList of MongoDB downloads from official website:\n\s\shttp://www.mongodb.org/display/DOCS/Downloads"
   exit
 end
 
+# Session Constants
 URL     = ARGV.shift
-OS      = ARGV.shift
+OS      = $1 if URL =~ /\/(osx|linux)\//
 FOLDER  = $1 if URL =~ /^.+\/(.+)\.tgz$/
-FILE    = FOLDER + ".tgz"
+FILE    = $1 + ".tgz" if URL =~ /^.+\/(.+)\.tgz$/
 HOME    = ENV['HOME']
+USER    = ENV['USER']
+
+# Package Operating System Detection
+if defined?(OS) then
+  puts "Detected #{OS} operating system package! Starting download.."
+else
+  puts "Could not determine OS from package, this was the url you provided: \"#{URL}\"."
+  puts "Please only use the official MongoDB packages from \"http://www.mongodb.org/display/DOCS/Downloads\""
+  exit
+end
 
 # Download MongoDB Package to $HOME directory and extract it.
 %x(cd #{HOME}; wget #{URL}; tar -xf #{FILE})
 
 # Ensure the existence of the /opt/mongodb,
 # /data/db and /usr/local/mongodb/logs directories
-%x(mkdir -p /opt/mongodb /data/db /usr/local/mongodb/logs)
+%x(sudo mkdir -p /opt/mongodb /data/db /usr/local/mongodb/logs)
+
+# Makes the new directories writable by the $USER
+%x(sudo chown -R #{USER} /opt/mongodb /data /usr/local/mongodb)
 
 # Move all extracted contents /opt/mongodb
-%x(mv #{HOME}/#{FOLDER}/* /opt/mongodb/)
+%x(sudo mv #{HOME}/#{FOLDER}/* /opt/mongodb/)
 
 
 if OS.eql? "osx" then
@@ -36,7 +49,7 @@ if OS.eql? "osx" then
   # MongoDB instances can be found in the ActivityMonitor app under the process name "mongod"
 end
 
-if OS.eql? "ubuntu" then
+if OS.eql? "linux" then  
   # Places a symlink from /opt/mongodb/bin/mongod into the /usr/local/sbin
   # so it can be executed on system bootup
   %x(ln -nfs /opt/mongodb/bin/mongod /usr/local/sbin)
