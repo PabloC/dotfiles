@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# WARNING
+# This script has not yet been tested!
+
 if ARGV.size < 2 then
   puts "Please provide your OS [osx|ubuntu] the URL to the MongoDB download."
   puts "Example:"
