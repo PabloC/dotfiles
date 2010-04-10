@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+if ARGV.size < 2 then
+  puts "Please provide your OS [osx|ubuntu] the URL to the MongoDB download."
+  puts "Example:"
+  puts "\s\sinstall-mongodb ubuntu http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.4.0.tgz"
+  exit
+end
+
+URL     = ARGV.shift
+OS      = ARGV.shift
+FOLDER  = $1 if URL =~ /^.+\/(.+)\.tgz$/
+FILE    = FOLDER + ".tgz"
+HOME    = ENV['HOME']
+
+# Download MongoDB Package to $HOME directory and extract it.
+%x(cd #{HOME}; wget #{URL}; tar -xf #{FILE})
+
+# Ensure the existence of the /opt/mongodb,
+# /data/db and /usr/local/mongodb/logs directories
+%x(mkdir -p /opt/mongodb /data/db /usr/local/mongodb/logs)
+
+# Move all extracted contents /opt/mongodb
+%x(mv #{HOME}/#{FOLDER}/* /opt/mongodb/)
+
+
+if OS.eql? "osx" then
+  # Nothing
+  # Two aliases are set up to run a MongoDB instance with and without shell(daemonized)
+  # ms    = Spawns a MongoDB instance and dedicates it to the current shell
+  # msd   = Spawns a MongoDB instance and forks it so it runs as a daemon so you can close the shell
+  # There currently is no auto-start up instance spawner setup
+  # MongoDB instances can be found in the ActivityMonitor app under the process name "mongod"
+end
+
+if OS.eql? "ubuntu" then
+  # Places a symlink from /opt/mongodb/bin/mongod into the /usr/local/sbin
+  # so it can be executed on system bootup
+  %x(ln -nfs /opt/mongodb/bin/mongod /usr/local/sbin)
+  
+  # Downloads the MongoDB init script to the /etc/init.d/ folder
+  # Renames it to mongodb and makes it executable
+  %x(cd /etc/init.d/; wget http://gist.github.com/raw/162954/f5d6434099b192f2da979a0356f4ec931189ad07/gistfile1.sh)
+  %x(cd /etc/init.d/; mv gistfile1.sh mongodb; chmod +x mongodb)
+  
+  # Ensure MongoDB starts up automatically after every system (re)boot
+  %x(update-rc.d mongodb start 51 S .)
+
+  # Starts up MongoDB right now
+  %x(/etc/init.d/mongodb start)
+end
+
+# Cleans up the old .tgz file and extracted folder
+%x(rm -rf #{HOME}/#{FILE} #{HOME}/#{FOLDER})
