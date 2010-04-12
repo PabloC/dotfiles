@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~/ && git clone git@github.com:meskyanichi/dotfiles.git
+cd ~/ && git clone git://github.com/meskyanichi/dotfiles.git
 cd dotfiles && rake install
 rm -rf ~/dotfiles
 source ~/.profile
