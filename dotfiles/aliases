@@ -22,7 +22,10 @@ alias gs="git status"
 alias gd="git diff"
 alias gb="git branch"
 alias gbd="git branch -d"
+alias gbD="git branch -D"
 alias gp="git push"
+alias gpo="git push origin"
+alias gpom="git push origin master"
 
 # Ruby Gem Commands
 alias gi="gem install"
@@ -37,8 +40,25 @@ alias sg="./script/generate"
 alias sc="./script/console"
 alias sp="./script/plugin"
 
+# Rails 3.x.x scripts
+alias rs="rails server"
+alias rg="rails generate"
+alias rc="rails console"
+alias rp="rails plugin"
+
+# Ruby Version Manager
+alias r2="rvm use ree"
+alias r3="rvm use ree@r3"
+alias 1.8.7="rvm use 1.8.7"
+alias 1.9.0="rvm use 1.9.0"
+alias 1.9.1="rvm use 1.9.1"
+alias 1.9.2="rvm use 1.9.2"
+
 # Flush Cache
 alias flushcache="dscacheutil -flushcache"
 
 # Open GitX
-alias gitx="open -a gitx"
+alias gitx="open -a gitx ."
+
+# TextMate Bundles
+alias tmb="cd ~/Library/Application Support/TextMate/Bundles"
