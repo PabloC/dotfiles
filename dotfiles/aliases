@@ -26,6 +26,7 @@ alias gbD="git branch -D"
 alias gp="git push"
 alias gpo="git push origin"
 alias gpom="git push origin master"
+alias gr="git reset --hard"
 
 # Ruby Gem Commands
 alias gi="gem install"
