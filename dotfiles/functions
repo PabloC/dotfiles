@@ -1,3 +1,8 @@
+# Heroku Create Bamboo Ree 1.8.7 Stack [appname]
+function hc {
+  heroku create --stack bamboo-ree-1.8.7 $1
+}
+
 # Clones own repository from GitHub
 function github {
   git clone git@github.com:meskyanichi/$1.git

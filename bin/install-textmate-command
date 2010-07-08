@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ln -s /Applications/TextMate.app/Contents/Resources/mate /usr/local/bin/mate
