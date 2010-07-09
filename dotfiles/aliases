@@ -29,7 +29,11 @@ alias gpom="git push origin master"
 alias gr="git reset --hard"
 
 # Heroku Push
+alias h="heroku"
 alias hp="git push heroku master"
+alias hl="heroku list"
+alias hd="heroku destroy --app"
+alias ho="heroku open"
 
 # Ruby Gem Commands
 alias gi="gem install"
