@@ -28,6 +28,9 @@ alias gpo="git push origin"
 alias gpom="git push origin master"
 alias gr="git reset --hard"
 
+# Heroku Push
+alias hp="git push heroku master"
+
 # Ruby Gem Commands
 alias gi="gem install"
 
