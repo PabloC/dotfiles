@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+##
+# Alias Sha1
+load File.join(File.expand_path(File.dirname(__FILE__)), 'sha1')

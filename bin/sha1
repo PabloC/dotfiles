@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'digest/sha1'
+
+begin
+  require 'highline/import'
+rescue LoadError
+  puts 'Tried to load Highline, but could not find it.'
+  puts 'Please install it by running the following command:'
+  puts 'gem install highline'
+end
+
+##
+# Ask what string needs to be hashed
+string  = ask('What would you like to hash?') { |string| string.echo = '*' }
+
+##
+# Hash the provided string
+hash    = Digest::SHA1.hexdigest(string)
+
+##
+# Output Hash
+puts hash
