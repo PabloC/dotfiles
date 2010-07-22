@@ -21,3 +21,7 @@ hash    = Digest::SHA1.hexdigest(string)
 ##
 # Output Hash
 puts hash
+
+##
+# Output Shortend
+puts hash[0, 20]
